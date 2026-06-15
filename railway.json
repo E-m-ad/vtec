@@ -8,12 +8,11 @@
       "package.json",
       "package-lock.json",
       "railway.json"
-    ],
-    "buildCommand": "npm run railway:build"
+    ]
   },
   "deploy": {
-    "preDeployCommand": "npm run railway:predeploy",
-    "startCommand": "npm run railway:start",
+    "preDeployCommand": "npx prisma migrate deploy",
+    "startCommand": "node src/app.js",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
