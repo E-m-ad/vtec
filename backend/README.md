@@ -87,7 +87,7 @@ See `docs/local-network-deployment.md`.
 
 ## Main Endpoints
 
-All endpoints except `/health`, `/api/auth/register`, and `/api/auth/login` require:
+All endpoints except `/health` and `/api/auth/login` require:
 
 ```http
 Authorization: Bearer <token>

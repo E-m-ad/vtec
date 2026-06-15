@@ -4,6 +4,9 @@
   "description": "Express and PostgreSQL backend for a car spare parts ERP system.",
   "main": "src/app.js",
   "type": "module",
+  "engines": {
+    "node": ">=22.12 <25"
+  },
   "scripts": {
     "start": "node src/app.js",
     "dev": "node --watch src/app.js",

@@ -9,7 +9,9 @@ import createError from '../utils/createError.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadRoot = path.resolve(__dirname, '../../uploads');
+const uploadRoot = path.resolve(
+  process.env.UPLOAD_ROOT || path.resolve(__dirname, '../../uploads'),
+);
 const serviceJobUploadDir = path.join(uploadRoot, 'service-jobs');
 
 const allowedMimePrefixes = ['image/', 'video/'];

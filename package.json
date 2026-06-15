@@ -1,0 +1,16 @@
+{
+  "name": "vtec-spare-parts-erp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Railway deployment wrapper for the VTEC spare parts ERP.",
+  "engines": {
+    "node": ">=22.12 <25"
+  },
+  "scripts": {
+    "build": "npm run railway:build",
+    "start": "npm run railway:start",
+    "railway:build": "npm ci --include=dev --prefix backend && npm ci --include=dev --prefix frontend && npm run prisma:generate --prefix backend && npm run build --prefix frontend",
+    "railway:predeploy": "npm run db:deploy --prefix backend",
+    "railway:start": "npm start --prefix backend"
+  }
+}
