@@ -106,6 +106,33 @@ app.get("/health", (_req, res) => {
     message: "Car spare parts ERP API is running",
   });
 });
+app.get("/", (_req, res) => {
+  res.json({
+    success: true,
+    message: "Car spare parts ERP API",
+    version: "1.0.0",
+    endpoints: {
+      health: "/health",
+      auth: "/api/auth",
+      categories: "/api/categories",
+      brands: "/api/brands",
+      products: "/api/products",
+      suppliers: "/api/suppliers",
+      customers: "/api/customers",
+      cars: "/api/cars",
+      employees: "/api/employees",
+      attendance: "/api/attendance",
+      inventoryCounts: "/api/inventory-counts",
+      moneyOut: "/api/money-out",
+      purchases: "/api/purchases",
+      sales: "/api/sales",
+      serviceJobs: "/api/service-jobs",
+      stockMovements: "/api/stock-movements",
+      reports: "/api/reports",
+      users: "/api/users"
+    }
+  });
+});
 app.use("/api/auth", authRateLimiter, authRoutes);
 app.use("/api/categories", authenticate, authorizePermission("categories.view"), categoryRoutes);
 app.use("/api/brands", authenticate, authorizePermission("brands.view"), brandRoutes);
