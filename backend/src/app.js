@@ -11,7 +11,6 @@ import { fileURLToPath } from "node:url";
 
 import authRoutes from "./modules/auth/auth.routes.js";
 import attendanceRoutes from "./modules/attendance/attendance.routes.js";
-import backupRoutes from "./modules/backups/backup.routes.js";
 import brandRoutes from "./modules/brands/brand.routes.js";
 import carRoutes from "./modules/cars/car.routes.js";
 import categoryRoutes from "./modules/categories/category.routes.js";
@@ -124,7 +123,6 @@ app.use("/api/service-jobs", authenticate, authorizePermission("service_jobs.vie
 app.use("/api/stock-movements", authenticate, authorizePermission("stock_movements.view"), stockMovementRoutes);
 app.use("/api/reports", authenticate, authorizePermission("reports.view"), reportRoutes);
 app.use("/api/users", authenticate, authorizePermission("accounts.manage"), userRoutes);
-app.use("/api/backups", authenticate, authorizePermission("backups.manage"), backupRoutes);
 
 const shouldServeFrontend =
   process.env.SERVE_FRONTEND === "true" || isProduction;
