@@ -8,6 +8,7 @@
     "node": ">=22.12 <25"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "start": "node src/app.js",
     "dev": "node --watch src/app.js",
     "prisma:generate": "prisma generate",
