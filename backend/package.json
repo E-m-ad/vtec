@@ -1,0 +1,40 @@
+{
+  "name": "car-spare-parts-erp-backend",
+  "version": "1.0.0",
+  "description": "Express and PostgreSQL backend for a car spare parts ERP system.",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "prisma:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:test": "node scripts/testDbConnection.js",
+    "db:backup": "node scripts/createBackup.js",
+    "db:backup:verify": "node scripts/verifyBackup.js",
+    "db:restore": "node scripts/restoreBackup.js",
+    "lan:check": "node scripts/lanPreflight.js"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.8.0",
+    "@prisma/client": "7.8.0",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "path": "^0.12.7",
+    "pg": "8.21.0"
+  },
+  "devDependencies": {
+    "prisma": "7.8.0"
+  }
+}

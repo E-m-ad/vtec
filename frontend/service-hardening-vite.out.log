@@ -1,0 +1,25 @@
+
+> car-spare-parts-erp-frontend@1.0.0 dev
+> vite --host 0.0.0.0
+
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m408[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.5:[1m5173[22m/[39m
+[2m12:47:44 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m12:47:44 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m12:48:39 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m1:56:27 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/pages/Accounts.jsx, /src/pages/Backups.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/ServiceJobs.jsx, /src/pages/Dashboard.jsx, /src/pages/ServiceJobDetails.jsx[22m
+[2m1:56:27 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/pages/Accounts.jsx, /src/pages/Backups.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/ServiceJobs.jsx, /src/pages/Dashboard.jsx, /src/pages/ServiceJobDetails.jsx[22m
+[2m1:56:40 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m1:56:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:19:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:19:18 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:19:30 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:19:38 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:19:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:20:24 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:20:35 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:35:52 PM[22m [36m[1m[vite][22m[39m [32mvite.config.js changed, restarting server...[39m
+[2m2:35:52 PM[22m [36m[1m[vite][22m[39m server restarted.

@@ -1,0 +1,1212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  manager
+  cashier
+  inventory
+  service_receptionist
+  service_advisor
+  service_technician
+  parts_clerk
+  qc_inspector
+  delivery_coordinator
+}
+
+enum PaymentStatus {
+  paid
+  partial
+  unpaid
+  refunded
+}
+
+enum StockMovementType {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+  SALE_RETURN
+  PURCHASE_RETURN
+}
+
+enum InventoryCountStatus {
+  counting
+  reviewed
+  outdated
+  applied
+  cancelled
+}
+
+enum EmployeeStatus {
+  active
+  inactive
+  on_leave
+  terminated
+}
+
+enum EmployeeSalaryTransactionType {
+  salary_payment
+  advance
+  deduction
+  bonus
+  allowance
+}
+
+enum AttendanceStatus {
+  present
+  absent
+}
+
+enum ServiceJobStatus {
+  RECEIVED
+  AWAITING_DIAGNOSIS
+  DIAGNOSIS_IN_PROGRESS
+  DIAGNOSIS_DONE
+  ESTIMATE_CREATED
+  AWAITING_APPROVAL
+  APPROVED
+  PARTIALLY_APPROVED
+  REJECTED
+  WAITING_PARTS
+  WORK_IN_PROGRESS
+  WORK_DONE
+  QC_IN_PROGRESS
+  QC_FAILED
+  QC_PASSED
+  READY_FOR_INVOICE
+  INVOICED
+  PAYMENT_PENDING
+  PAID
+  READY_FOR_DELIVERY
+  DELIVERED
+  CLOSED
+  CANCELLED
+}
+
+enum InvoiceLineType {
+  product
+  service
+}
+
+enum ServiceEstimateStatus {
+  draft
+  sent
+  approved
+  partially_approved
+  rejected
+}
+
+enum ServiceLineApprovalStatus {
+  pending
+  approved
+  rejected
+}
+
+enum ServiceWorkOrderStatus {
+  pending
+  in_progress
+  done
+  cancelled
+}
+
+enum ServiceWorkLineStatus {
+  pending
+  in_progress
+  done
+  rework
+  cancelled
+}
+
+enum ServicePartRequestStatus {
+  requested
+  reserved
+  issued
+  unavailable
+  returned
+}
+
+enum ServiceApprovalMethod {
+  paper_signature
+  phone
+  whatsapp
+  sms
+  email
+  system
+}
+
+enum ServiceCustomerApprovalStatus {
+  approved
+  partially_approved
+  rejected
+}
+
+enum SupplierOpeningBalanceType {
+  payable
+  credit
+}
+
+enum CustomerOpeningBalanceType {
+  receivable
+  credit
+}
+
+enum SupplierRefundType {
+  credit_note
+  cash_refund
+}
+
+model User {
+  id                          Int                         @id @default(autoincrement())
+  name                        String                      @db.VarChar(120)
+  email                       String                      @unique @db.VarChar(160)
+  passwordHash                String                      @map("password_hash")
+  role                        UserRole                    @default(cashier)
+  isActive                    Boolean                     @default(true) @map("is_active")
+  permissionsCustomized       Boolean                     @default(false) @map("permissions_customized")
+  createdAt                   DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                   DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  userPermissions             UserPermission[]
+  purchases                   Purchase[]                  @relation("PurchaseCreator")
+  sales                       Sale[]                      @relation("SaleCreator")
+  saleReturns                 SaleReturn[]                @relation("SaleReturnCreator")
+  purchaseReturns             PurchaseReturn[]            @relation("PurchaseReturnCreator")
+  customerRefunds             CustomerRefund[]            @relation("CustomerRefundCreator")
+  supplierRefunds             SupplierRefund[]            @relation("SupplierRefundCreator")
+  stockMovements              StockMovement[]             @relation("StockMovementCreator")
+  inventoryCountSessions      InventoryCountSession[]     @relation("InventoryCountSessionCreator")
+  inventoryCountItems         InventoryCountItem[]        @relation("InventoryCountItemCounter")
+  supplierPayments            SupplierPayment[]           @relation("SupplierPaymentCreator")
+  employeeSalaryTransactions  EmployeeSalaryTransaction[] @relation("EmployeeSalaryTransactionCreator")
+  employeeAttendances         EmployeeAttendance[]        @relation("EmployeeAttendanceCreator")
+  generalExpenses             GeneralExpense[]            @relation("GeneralExpenseCreator")
+  salePayments                SalePayment[]               @relation("SalePaymentCreator")
+  customerPayments            CustomerPayment[]           @relation("CustomerPaymentCreator")
+  serviceJobs                 ServiceJob[]                @relation("ServiceJobCreator")
+  serviceAdvisorJobs          ServiceJob[]                @relation("ServiceJobAdvisor")
+  serviceTechnicianJobs       ServiceJob[]                @relation("ServiceJobTechnician")
+  serviceJobItems             ServiceJobItem[]            @relation("ServiceJobItemCreator")
+  serviceJobPayments          ServiceJobPayment[]         @relation("ServiceJobPaymentCreator")
+  serviceJobComplaints        ServiceJobComplaint[]       @relation("ServiceJobComplaintCreator")
+  serviceCheckInInspections   ServiceCheckInInspection[]  @relation("ServiceCheckInInspectionCreator")
+  serviceDiagnosisReports     ServiceDiagnosisReport[]    @relation("ServiceDiagnosisReportCreator")
+  serviceDiagnosisAssignments ServiceDiagnosisReport[]    @relation("ServiceDiagnosisTechnician")
+  serviceEstimates            ServiceEstimate[]           @relation("ServiceEstimateCreator")
+  serviceCustomerApprovals    ServiceCustomerApproval[]   @relation("ServiceCustomerApprovalCreator")
+  serviceWorkOrders           ServiceWorkOrder[]          @relation("ServiceWorkOrderCreator")
+  serviceWorkOrderLines       ServiceWorkOrderLine[]      @relation("ServiceWorkOrderLineCreator")
+  serviceWorkLineAssignments  ServiceWorkOrderLine[]      @relation("ServiceWorkOrderLineTechnician")
+  servicePartRequests         ServicePartRequest[]        @relation("ServicePartRequestCreator")
+  serviceQCReports            ServiceQCReport[]           @relation("ServiceQCReportCreator")
+  serviceDeliveryHandovers    ServiceDeliveryHandover[]   @relation("ServiceDeliveryHandoverCreator")
+  serviceJobHistories         ServiceJobHistory[]         @relation("ServiceJobHistoryPerformer")
+  supplierProductSettlements  SupplierProductSettlement[] @relation("SupplierProductSettlementCreator")
+  supplierLegacyWorkbooks     SupplierLegacyWorkbook[]    @relation("SupplierLegacyWorkbookUploader")
+  supplierOpeningBalances     SupplierOpeningBalance[]    @relation("SupplierOpeningBalanceCreator")
+  customerOpeningBalances     CustomerOpeningBalance[]    @relation("CustomerOpeningBalanceCreator")
+
+  @@map("users")
+}
+
+model UserPermission {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  permission String   @db.VarChar(120)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permission])
+  @@index([permission])
+  @@map("user_permissions")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(120)
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Brand {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(120)
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  products    Product[]
+
+  @@map("brands")
+}
+
+model Supplier {
+  id                 Int                         @id @default(autoincrement())
+  name               String                      @unique @db.VarChar(160)
+  contactName        String?                     @map("contact_name") @db.VarChar(120)
+  phone              String?                     @unique @db.VarChar(40)
+  email              String?                     @unique @db.VarChar(160)
+  address            String?
+  taxNumber          String?                     @map("tax_number") @db.VarChar(80)
+  notes              String?
+  createdAt          DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  products           Product[]
+  purchases          Purchase[]
+  purchaseReturns    PurchaseReturn[]
+  payments           SupplierPayment[]
+  productSettlements SupplierProductSettlement[]
+  legacyWorkbooks    SupplierLegacyWorkbook[]
+  openingBalances    SupplierOpeningBalance[]
+  refunds            SupplierRefund[]
+
+  @@map("suppliers")
+}
+
+model SupplierOpeningBalance {
+  id          Int                        @id @default(autoincrement())
+  supplierId  Int                        @map("supplier_id")
+  type        SupplierOpeningBalanceType @default(payable)
+  amount      Decimal                    @db.Decimal(12, 2)
+  balanceDate DateTime                   @default(now()) @map("balance_date") @db.Timestamptz(3)
+  notes       String?
+  createdBy   Int?                       @map("created_by")
+  createdAt   DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  supplier    Supplier                   @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  creator     User?                      @relation("SupplierOpeningBalanceCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([supplierId])
+  @@index([balanceDate])
+  @@index([type])
+  @@map("supplier_opening_balances")
+}
+
+model SupplierLegacyWorkbook {
+  id               Int       @id @default(autoincrement())
+  supplierId       Int       @map("supplier_id")
+  originalFileName String    @map("original_file_name") @db.VarChar(255)
+  storedFileName   String    @unique @map("stored_file_name") @db.VarChar(255)
+  fileSizeBytes    Int       @map("file_size_bytes")
+  checksumSha256   String    @map("checksum_sha256") @db.VarChar(64)
+  sheetCount       Int       @default(0) @map("sheet_count")
+  uploadedBy       Int?      @map("uploaded_by")
+  uploadedAt       DateTime  @default(now()) @map("uploaded_at") @db.Timestamptz(3)
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(3)
+  supplier         Supplier  @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  uploader         User?     @relation("SupplierLegacyWorkbookUploader", fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+  @@index([supplierId])
+  @@index([uploadedAt])
+  @@index([deletedAt])
+  @@map("supplier_legacy_workbooks")
+}
+
+model Customer {
+  id              Int                      @id @default(autoincrement())
+  name            String                   @db.VarChar(160)
+  phone           String?                  @db.VarChar(40)
+  email           String?                  @db.VarChar(160)
+  address         String?
+  taxNumber       String?                  @map("tax_number") @db.VarChar(80)
+  notes           String?
+  createdAt       DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  sales           Sale[]
+  saleReturns     SaleReturn[]
+  refunds         CustomerRefund[]
+  cars            Car[]
+  serviceJobs     ServiceJob[]
+  payments        CustomerPayment[]
+  openingBalances CustomerOpeningBalance[]
+
+  @@map("customers")
+}
+
+model CustomerOpeningBalance {
+  id          Int                        @id @default(autoincrement())
+  customerId  Int                        @map("customer_id")
+  type        CustomerOpeningBalanceType @default(receivable)
+  amount      Decimal                    @db.Decimal(12, 2)
+  balanceDate DateTime                   @default(now()) @map("balance_date") @db.Timestamptz(3)
+  notes       String?
+  createdBy   Int?                       @map("created_by")
+  createdAt   DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  customer    Customer                   @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  creator     User?                      @relation("CustomerOpeningBalanceCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+  @@index([balanceDate])
+  @@index([type])
+  @@map("customer_opening_balances")
+}
+
+model CustomerPayment {
+  id            Int      @id @default(autoincrement())
+  customerId    Int      @map("customer_id")
+  amount        Decimal  @db.Decimal(12, 2)
+  paymentDate   DateTime @default(now()) @map("payment_date") @db.Timestamptz(3)
+  paymentMethod String?  @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?     @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  creator       User?    @relation("CustomerPaymentCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+  @@index([paymentDate])
+  @@map("customer_payments")
+}
+
+model Car {
+  id          Int          @id @default(autoincrement())
+  customerId  Int?         @map("customer_id")
+  plateNumber String?      @unique @map("plate_number") @db.VarChar(40)
+  vin         String?      @unique @db.VarChar(80)
+  make        String       @db.VarChar(120)
+  model       String       @db.VarChar(120)
+  year        Int?
+  color       String?      @db.VarChar(80)
+  notes       String?
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  customer    Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  sales       Sale[]
+  serviceJobs ServiceJob[]
+
+  @@index([customerId])
+  @@index([make, model])
+  @@map("cars")
+}
+
+model Employee {
+  id                 Int                         @id @default(autoincrement())
+  employeeCode       String?                     @unique @map("employee_code") @db.VarChar(80)
+  name               String                      @db.VarChar(160)
+  phone              String?                     @unique @db.VarChar(40)
+  email              String?                     @unique @db.VarChar(160)
+  address            String?
+  position           String?                     @db.VarChar(120)
+  department         String?                     @db.VarChar(120)
+  salary             Decimal?                    @db.Decimal(12, 2)
+  hireDate           DateTime?                   @map("hire_date") @db.Date
+  status             EmployeeStatus              @default(active)
+  attendanceToken    String?                     @unique @map("attendance_token") @db.VarChar(120)
+  notes              String?
+  createdAt          DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  salaryTransactions EmployeeSalaryTransaction[]
+  attendanceRecords  EmployeeAttendance[]
+
+  @@index([name])
+  @@index([status])
+  @@map("employees")
+}
+
+model EmployeeSalaryTransaction {
+  id                  Int                           @id @default(autoincrement())
+  employeeId          Int                           @map("employee_id")
+  type                EmployeeSalaryTransactionType
+  amount              Decimal                       @db.Decimal(12, 2)
+  transactionDate     DateTime                      @default(now()) @map("transaction_date") @db.Timestamptz(3)
+  paymentMethod       String?                       @map("payment_method") @db.VarChar(60)
+  notes               String?
+  createdBy           Int?                          @map("created_by")
+  createdAt           DateTime                      @default(now()) @map("created_at") @db.Timestamptz(3)
+  employee            Employee                      @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  creator             User?                         @relation("EmployeeSalaryTransactionCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  attendanceDeduction EmployeeAttendance?           @relation("AttendanceDeduction")
+
+  @@index([employeeId])
+  @@index([transactionDate])
+  @@index([type])
+  @@map("employee_salary_transactions")
+}
+
+model EmployeeAttendance {
+  id                     Int                        @id @default(autoincrement())
+  employeeId             Int                        @map("employee_id")
+  attendanceDate         DateTime                   @map("attendance_date") @db.Date
+  status                 AttendanceStatus
+  checkInAt              DateTime?                  @map("check_in_at") @db.Timestamptz(3)
+  deductionAmount        Decimal?                   @map("deduction_amount") @db.Decimal(12, 2)
+  deductionTransactionId Int?                       @unique @map("deduction_transaction_id")
+  notes                  String?
+  finalized              Boolean                    @default(false)
+  createdBy              Int?                       @map("created_by")
+  createdAt              DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  employee               Employee                   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  deductionTransaction   EmployeeSalaryTransaction? @relation("AttendanceDeduction", fields: [deductionTransactionId], references: [id], onDelete: SetNull)
+  creator                User?                      @relation("EmployeeAttendanceCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@unique([employeeId, attendanceDate])
+  @@index([attendanceDate])
+  @@index([status])
+  @@index([finalized])
+  @@map("employee_attendance")
+}
+
+model GeneralExpense {
+  id            Int      @id @default(autoincrement())
+  category      String   @db.VarChar(120)
+  amount        Decimal  @db.Decimal(12, 2)
+  expenseDate   DateTime @default(now()) @map("expense_date") @db.Timestamptz(3)
+  paymentMethod String?  @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?     @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  creator       User?    @relation("GeneralExpenseCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([expenseDate])
+  @@index([category])
+  @@index([createdBy])
+  @@map("general_expenses")
+}
+
+model Product {
+  id                         Int                         @id @default(autoincrement())
+  sku                        String                      @unique @db.VarChar(80)
+  barcode                    String?                     @unique @db.VarChar(120)
+  name                       String                      @db.VarChar(180)
+  description                String?
+  categoryId                 Int?                        @map("category_id")
+  brandId                    Int?                        @map("brand_id")
+  supplierId                 Int?                        @map("supplier_id")
+  purchasePrice              Decimal                     @default(0) @map("purchase_price") @db.Decimal(12, 2)
+  salePrice                  Decimal                     @default(0) @map("sale_price") @db.Decimal(12, 2)
+  stockQuantity              Int                         @default(0) @map("stock_quantity")
+  minStockLevel              Int                         @default(0) @map("min_stock_level")
+  location                   String?                     @db.VarChar(120)
+  isActive                   Boolean                     @default(true) @map("is_active")
+  createdAt                  DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                  DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  category                   Category?                   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  brand                      Brand?                      @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  supplier                   Supplier?                   @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  purchaseItems              PurchaseItem[]
+  saleItems                  SaleItem[]
+  saleReturnItems            SaleReturnItem[]
+  purchaseReturnItems        PurchaseReturnItem[]
+  serviceJobItems            ServiceJobItem[]
+  serviceEstimateLines       ServiceEstimateLine[]
+  servicePartRequests        ServicePartRequest[]
+  stockMovements             StockMovement[]
+  inventoryCountItems        InventoryCountItem[]
+  supplierProductSettlements SupplierProductSettlement[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([supplierId])
+  @@map("products")
+}
+
+model InventoryCountSession {
+  id          Int                  @id @default(autoincrement())
+  countNumber String               @unique @map("count_number") @db.VarChar(120)
+  status      InventoryCountStatus @default(counting)
+  scopeType   String               @default("all") @map("scope_type") @db.VarChar(60)
+  scopeValue  String?              @map("scope_value") @db.VarChar(160)
+  startedAt   DateTime             @default(now()) @map("started_at") @db.Timestamptz(3)
+  reviewedAt  DateTime?            @map("reviewed_at") @db.Timestamptz(3)
+  appliedAt   DateTime?            @map("applied_at") @db.Timestamptz(3)
+  notes       String?
+  createdBy   Int?                 @map("created_by")
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  creator     User?                @relation("InventoryCountSessionCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  items       InventoryCountItem[]
+
+  @@index([status])
+  @@index([startedAt])
+  @@map("inventory_count_sessions")
+}
+
+model InventoryCountItem {
+  id                     Int                   @id @default(autoincrement())
+  sessionId              Int                   @map("session_id")
+  productId              Int                   @map("product_id")
+  systemQuantitySnapshot Int                   @default(0) @map("system_quantity_snapshot")
+  countedQuantity        Int                   @default(0) @map("counted_quantity")
+  scannedCount           Int                   @default(0) @map("scanned_count")
+  isCounted              Boolean               @default(false) @map("is_counted")
+  unitCost               Decimal               @default(0) @map("unit_cost") @db.Decimal(12, 2)
+  addedFromScan          Boolean               @default(false) @map("added_from_scan")
+  lastScannedAt          DateTime?             @map("last_scanned_at") @db.Timestamptz(3)
+  notes                  String?
+  countedBy              Int?                  @map("counted_by")
+  createdAt              DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  session                InventoryCountSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  product                Product               @relation(fields: [productId], references: [id], onDelete: Restrict)
+  counter                User?                 @relation("InventoryCountItemCounter", fields: [countedBy], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, productId])
+  @@index([sessionId])
+  @@index([productId])
+  @@index([isCounted])
+  @@map("inventory_count_items")
+}
+
+model Purchase {
+  id                           Int                                   @id @default(autoincrement())
+  supplierId                   Int?                                  @map("supplier_id")
+  invoiceNumber                String?                               @map("invoice_number") @db.VarChar(120)
+  purchaseDate                 DateTime                              @default(now()) @map("purchase_date") @db.Timestamptz(3)
+  totalAmount                  Decimal                               @default(0) @map("total_amount") @db.Decimal(12, 2)
+  notes                        String?
+  createdBy                    Int?                                  @map("created_by")
+  createdAt                    DateTime                              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                    DateTime                              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  supplier                     Supplier?                             @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  creator                      User?                                 @relation("PurchaseCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  items                        PurchaseItem[]
+  payments                     SupplierPayment[]
+  returns                      PurchaseReturn[]
+  refunds                      SupplierRefund[]
+  productSettlements           SupplierProductSettlement[]
+  productSettlementAllocations SupplierProductSettlementAllocation[]
+
+  @@index([supplierId])
+  @@index([purchaseDate])
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id          Int                  @id @default(autoincrement())
+  purchaseId  Int                  @map("purchase_id")
+  productId   Int                  @map("product_id")
+  quantity    Int
+  unitCost    Decimal              @map("unit_cost") @db.Decimal(12, 2)
+  lineTotal   Decimal              @map("line_total") @db.Decimal(12, 2)
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  purchase    Purchase             @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product     Product              @relation(fields: [productId], references: [id], onDelete: Restrict)
+  returnItems PurchaseReturnItem[]
+
+  @@map("purchase_items")
+}
+
+model PurchaseReturn {
+  id           Int                  @id @default(autoincrement())
+  purchaseId   Int                  @map("purchase_id")
+  supplierId   Int?                 @map("supplier_id")
+  returnNumber String               @unique @map("return_number") @db.VarChar(120)
+  returnDate   DateTime             @default(now()) @map("return_date") @db.Timestamptz(3)
+  totalAmount  Decimal              @default(0) @map("total_amount") @db.Decimal(12, 2)
+  notes        String?
+  createdBy    Int?                 @map("created_by")
+  createdAt    DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  purchase     Purchase             @relation(fields: [purchaseId], references: [id], onDelete: Restrict)
+  supplier     Supplier?            @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  creator      User?                @relation("PurchaseReturnCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  items        PurchaseReturnItem[]
+
+  @@index([purchaseId])
+  @@index([supplierId])
+  @@index([returnDate])
+  @@map("purchase_returns")
+}
+
+model PurchaseReturnItem {
+  id               Int            @id @default(autoincrement())
+  purchaseReturnId Int            @map("purchase_return_id")
+  purchaseItemId   Int            @map("purchase_item_id")
+  productId        Int            @map("product_id")
+  quantity         Int
+  unitCost         Decimal        @map("unit_cost") @db.Decimal(12, 2)
+  lineTotal        Decimal        @map("line_total") @db.Decimal(12, 2)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  purchaseReturn   PurchaseReturn @relation(fields: [purchaseReturnId], references: [id], onDelete: Cascade)
+  purchaseItem     PurchaseItem   @relation(fields: [purchaseItemId], references: [id], onDelete: Restrict)
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([purchaseReturnId])
+  @@index([purchaseItemId])
+  @@index([productId])
+  @@map("purchase_return_items")
+}
+
+model SupplierPayment {
+  id            Int       @id @default(autoincrement())
+  supplierId    Int       @map("supplier_id")
+  purchaseId    Int?      @map("purchase_id")
+  amount        Decimal   @db.Decimal(12, 2)
+  paymentDate   DateTime  @default(now()) @map("payment_date") @db.Timestamptz(3)
+  paymentMethod String?   @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?      @map("created_by")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  supplier      Supplier  @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  purchase      Purchase? @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  creator       User?     @relation("SupplierPaymentCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([supplierId])
+  @@index([purchaseId])
+  @@index([paymentDate])
+  @@map("supplier_payments")
+}
+
+model SupplierRefund {
+  id            Int                @id @default(autoincrement())
+  supplierId    Int                @map("supplier_id")
+  purchaseId    Int?               @map("purchase_id")
+  type          SupplierRefundType @default(credit_note)
+  amount        Decimal            @db.Decimal(12, 2)
+  refundDate    DateTime           @default(now()) @map("refund_date") @db.Timestamptz(3)
+  paymentMethod String?            @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?               @map("created_by")
+  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  supplier      Supplier           @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  purchase      Purchase?          @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  creator       User?              @relation("SupplierRefundCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([supplierId])
+  @@index([purchaseId])
+  @@index([refundDate])
+  @@index([type])
+  @@map("supplier_refunds")
+}
+
+model SupplierProductSettlement {
+  id             Int                                   @id @default(autoincrement())
+  supplierId     Int                                   @map("supplier_id")
+  purchaseId     Int?                                  @map("purchase_id")
+  productId      Int                                   @map("product_id")
+  quantity       Int
+  unitCost       Decimal                               @default(0) @map("unit_cost") @db.Decimal(12, 2)
+  amount         Decimal                               @db.Decimal(12, 2)
+  settlementDate DateTime                              @default(now()) @map("settlement_date") @db.Timestamptz(3)
+  notes          String?
+  createdBy      Int?                                  @map("created_by")
+  createdAt      DateTime                              @default(now()) @map("created_at") @db.Timestamptz(3)
+  supplier       Supplier                              @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  purchase       Purchase?                             @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  product        Product                               @relation(fields: [productId], references: [id], onDelete: Restrict)
+  creator        User?                                 @relation("SupplierProductSettlementCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  allocations    SupplierProductSettlementAllocation[]
+
+  @@index([supplierId])
+  @@index([purchaseId])
+  @@index([productId])
+  @@index([settlementDate])
+  @@map("supplier_product_settlements")
+}
+
+model SupplierProductSettlementAllocation {
+  id           Int                       @id @default(autoincrement())
+  settlementId Int                       @map("settlement_id")
+  purchaseId   Int                       @map("purchase_id")
+  amount       Decimal                   @db.Decimal(12, 2)
+  createdAt    DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  settlement   SupplierProductSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  purchase     Purchase                  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([settlementId])
+  @@index([purchaseId])
+  @@map("supplier_product_settlement_allocations")
+}
+
+model Sale {
+  id            Int              @id @default(autoincrement())
+  customerId    Int?             @map("customer_id")
+  carId         Int?             @map("car_id")
+  customerName  String?          @map("customer_name") @db.VarChar(160)
+  saleNumber    String           @unique @map("sale_number") @db.VarChar(120)
+  saleDate      DateTime         @default(now()) @map("sale_date") @db.Timestamptz(3)
+  totalAmount   Decimal          @default(0) @map("total_amount") @db.Decimal(12, 2)
+  paidAmount    Decimal          @default(0) @map("paid_amount") @db.Decimal(12, 2)
+  paymentMethod String?          @map("payment_method") @db.VarChar(60)
+  paymentStatus PaymentStatus    @default(paid) @map("payment_status")
+  notes         String?
+  createdBy     Int?             @map("created_by")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  customer      Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  car           Car?             @relation(fields: [carId], references: [id], onDelete: SetNull)
+  creator       User?            @relation("SaleCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  items         SaleItem[]
+  payments      SalePayment[]
+  returns       SaleReturn[]
+  refunds       CustomerRefund[]
+  serviceJob    ServiceJob?
+
+  @@index([customerId])
+  @@index([carId])
+  @@index([saleDate])
+  @@map("sales")
+}
+
+model SalePayment {
+  id            Int      @id @default(autoincrement())
+  saleId        Int      @map("sale_id")
+  amount        Decimal  @db.Decimal(12, 2)
+  paymentDate   DateTime @default(now()) @map("payment_date") @db.Timestamptz(3)
+  paymentMethod String?  @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?     @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  sale          Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  creator       User?    @relation("SalePaymentCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([saleId])
+  @@index([paymentDate])
+  @@map("sale_payments")
+}
+
+model CustomerRefund {
+  id            Int      @id @default(autoincrement())
+  customerId    Int      @map("customer_id")
+  saleId        Int?     @map("sale_id")
+  amount        Decimal  @db.Decimal(12, 2)
+  refundDate    DateTime @default(now()) @map("refund_date") @db.Timestamptz(3)
+  paymentMethod String?  @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?     @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  sale          Sale?    @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  creator       User?    @relation("CustomerRefundCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+  @@index([saleId])
+  @@index([refundDate])
+  @@map("customer_refunds")
+}
+
+model SaleReturn {
+  id           Int              @id @default(autoincrement())
+  saleId       Int              @map("sale_id")
+  customerId   Int?             @map("customer_id")
+  returnNumber String           @unique @map("return_number") @db.VarChar(120)
+  returnDate   DateTime         @default(now()) @map("return_date") @db.Timestamptz(3)
+  totalAmount  Decimal          @default(0) @map("total_amount") @db.Decimal(12, 2)
+  notes        String?
+  createdBy    Int?             @map("created_by")
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  sale         Sale             @relation(fields: [saleId], references: [id], onDelete: Restrict)
+  customer     Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  creator      User?            @relation("SaleReturnCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  items        SaleReturnItem[]
+
+  @@index([saleId])
+  @@index([customerId])
+  @@index([returnDate])
+  @@map("sale_returns")
+}
+
+model SaleReturnItem {
+  id           Int        @id @default(autoincrement())
+  saleReturnId Int        @map("sale_return_id")
+  saleItemId   Int        @map("sale_item_id")
+  productId    Int        @map("product_id")
+  quantity     Int
+  unitPrice    Decimal    @map("unit_price") @db.Decimal(12, 2)
+  lineTotal    Decimal    @map("line_total") @db.Decimal(12, 2)
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  saleReturn   SaleReturn @relation(fields: [saleReturnId], references: [id], onDelete: Cascade)
+  saleItem     SaleItem   @relation(fields: [saleItemId], references: [id], onDelete: Restrict)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([saleReturnId])
+  @@index([saleItemId])
+  @@index([productId])
+  @@map("sale_return_items")
+}
+
+model SaleItem {
+  id          Int              @id @default(autoincrement())
+  saleId      Int              @map("sale_id")
+  productId   Int?             @map("product_id")
+  lineType    InvoiceLineType  @default(product) @map("line_type")
+  description String?          @db.VarChar(220)
+  quantity    Int
+  unitPrice   Decimal          @map("unit_price") @db.Decimal(12, 2)
+  lineTotal   Decimal          @map("line_total") @db.Decimal(12, 2)
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  sale        Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product     Product?         @relation(fields: [productId], references: [id], onDelete: Restrict)
+  returnItems SaleReturnItem[]
+
+  @@map("sale_items")
+}
+
+model ServiceJob {
+  id                   Int                        @id @default(autoincrement())
+  jobNumber            String                     @unique @map("job_number") @db.VarChar(120)
+  customerId           Int?                       @map("customer_id")
+  carId                Int                        @map("car_id")
+  saleId               Int?                       @unique @map("sale_id")
+  status               ServiceJobStatus           @default(RECEIVED)
+  currentStage         String?                    @map("current_stage") @db.VarChar(80)
+  assignedAdvisorId    Int?                       @map("assigned_advisor_id")
+  assignedTechnicianId Int?                       @map("assigned_technician_id")
+  startDate            DateTime                   @default(now()) @map("start_date") @db.Timestamptz(3)
+  openedAt             DateTime                   @default(now()) @map("opened_at") @db.Timestamptz(3)
+  expectedFinishDate   DateTime?                  @map("expected_finish_date") @db.Date
+  finishedAt           DateTime?                  @map("finished_at") @db.Timestamptz(3)
+  closedAt             DateTime?                  @map("closed_at") @db.Timestamptz(3)
+  notes                String?
+  createdBy            Int?                       @map("created_by")
+  createdAt            DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  customer             Customer?                  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  car                  Car                        @relation(fields: [carId], references: [id], onDelete: Restrict)
+  sale                 Sale?                      @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  creator              User?                      @relation("ServiceJobCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  assignedAdvisor      User?                      @relation("ServiceJobAdvisor", fields: [assignedAdvisorId], references: [id], onDelete: SetNull)
+  assignedTechnician   User?                      @relation("ServiceJobTechnician", fields: [assignedTechnicianId], references: [id], onDelete: SetNull)
+  items                ServiceJobItem[]
+  payments             ServiceJobPayment[]
+  complaints           ServiceJobComplaint[]
+  inspections          ServiceCheckInInspection[]
+  diagnosisReports     ServiceDiagnosisReport[]
+  estimates            ServiceEstimate[]
+  approvals            ServiceCustomerApproval[]
+  workOrders           ServiceWorkOrder[]
+  partRequests         ServicePartRequest[]
+  qcReports            ServiceQCReport[]
+  deliveryHandovers    ServiceDeliveryHandover[]
+  histories            ServiceJobHistory[]
+
+  @@index([customerId])
+  @@index([carId])
+  @@index([status])
+  @@index([assignedAdvisorId])
+  @@index([assignedTechnicianId])
+  @@index([startDate])
+  @@index([openedAt])
+  @@map("service_jobs")
+}
+
+model ServiceJobItem {
+  id               Int                       @id @default(autoincrement())
+  jobId            Int                       @map("job_id")
+  productId        Int?                      @map("product_id")
+  estimateLineId   Int?                      @unique @map("estimate_line_id")
+  lineType         InvoiceLineType           @default(product) @map("line_type")
+  description      String?                   @db.VarChar(220)
+  quantity         Int
+  approvedQuantity Int                       @default(0) @map("approved_quantity")
+  issuedQuantity   Int                       @default(0) @map("issued_quantity")
+  returnedQuantity Int                       @default(0) @map("returned_quantity")
+  approvalStatus   ServiceLineApprovalStatus @default(approved) @map("approval_status")
+  workStatus       ServiceWorkLineStatus     @default(pending) @map("work_status")
+  unitCost         Decimal                   @default(0) @map("unit_cost") @db.Decimal(12, 2)
+  unitPrice        Decimal                   @default(0) @map("unit_price") @db.Decimal(12, 2)
+  lineTotal        Decimal                   @default(0) @map("line_total") @db.Decimal(12, 2)
+  notes            String?
+  completedAt      DateTime?                 @map("completed_at") @db.Timestamptz(3)
+  createdBy        Int?                      @map("created_by")
+  createdAt        DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  job              ServiceJob                @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  product          Product?                  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  estimateLine     ServiceEstimateLine?      @relation(fields: [estimateLineId], references: [id], onDelete: SetNull)
+  creator          User?                     @relation("ServiceJobItemCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  partRequests     ServicePartRequest[]
+  workOrderLines   ServiceWorkOrderLine[]
+
+  @@index([jobId])
+  @@index([productId])
+  @@index([approvalStatus])
+  @@index([workStatus])
+  @@map("service_job_items")
+}
+
+model ServiceJobPayment {
+  id            Int        @id @default(autoincrement())
+  jobId         Int        @map("job_id")
+  amount        Decimal    @db.Decimal(12, 2)
+  paymentDate   DateTime   @default(now()) @map("payment_date") @db.Timestamptz(3)
+  paymentMethod String?    @map("payment_method") @db.VarChar(60)
+  notes         String?
+  createdBy     Int?       @map("created_by")
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  job           ServiceJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator       User?      @relation("ServiceJobPaymentCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([paymentDate])
+  @@map("service_job_payments")
+}
+
+model ServiceJobComplaint {
+  id          Int        @id @default(autoincrement())
+  jobId       Int        @map("job_id")
+  description String
+  createdBy   Int?       @map("created_by")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  job         ServiceJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator     User?      @relation("ServiceJobComplaintCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@map("service_job_complaints")
+}
+
+model ServiceCheckInInspection {
+  id               Int        @id @default(autoincrement())
+  jobId            Int        @map("job_id")
+  odometer         Int?
+  fuelLevel        String?    @map("fuel_level") @db.VarChar(40)
+  visualInspection String?    @map("visual_inspection")
+  photos           Json?
+  notes            String?
+  createdBy        Int?       @map("created_by")
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job              ServiceJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator          User?      @relation("ServiceCheckInInspectionCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@map("service_check_in_inspections")
+}
+
+model ServiceDiagnosisReport {
+  id              Int               @id @default(autoincrement())
+  jobId           Int               @map("job_id")
+  technicianId    Int?              @map("technician_id")
+  diagnosisNotes  String?           @map("diagnosis_notes")
+  faultCodes      String?           @map("fault_codes")
+  cause           String?
+  recommendedWork String?           @map("recommended_work")
+  diagnosticFee   Decimal           @default(0) @map("diagnostic_fee") @db.Decimal(12, 2)
+  createdBy       Int?              @map("created_by")
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job             ServiceJob        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  technician      User?             @relation("ServiceDiagnosisTechnician", fields: [technicianId], references: [id], onDelete: SetNull)
+  creator         User?             @relation("ServiceDiagnosisReportCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  estimates       ServiceEstimate[]
+
+  @@index([jobId])
+  @@index([technicianId])
+  @@map("service_diagnosis_reports")
+}
+
+model ServiceEstimate {
+  id                Int                       @id @default(autoincrement())
+  jobId             Int                       @map("job_id")
+  diagnosisReportId Int?                      @map("diagnosis_report_id")
+  estimateNumber    String                    @unique @map("estimate_number") @db.VarChar(120)
+  status            ServiceEstimateStatus     @default(draft)
+  isSupplemental    Boolean                   @default(false) @map("is_supplemental")
+  sourceStatus      ServiceJobStatus?         @map("source_status")
+  subtotal          Decimal                   @default(0) @db.Decimal(12, 2)
+  discountAmount    Decimal                   @default(0) @map("discount_amount") @db.Decimal(12, 2)
+  taxAmount         Decimal                   @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount       Decimal                   @default(0) @map("total_amount") @db.Decimal(12, 2)
+  notes             String?
+  sentAt            DateTime?                 @map("sent_at") @db.Timestamptz(3)
+  createdBy         Int?                      @map("created_by")
+  createdAt         DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job               ServiceJob                @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  diagnosisReport   ServiceDiagnosisReport?   @relation(fields: [diagnosisReportId], references: [id], onDelete: SetNull)
+  creator           User?                     @relation("ServiceEstimateCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  lines             ServiceEstimateLine[]
+  approvals         ServiceCustomerApproval[]
+
+  @@index([jobId])
+  @@index([jobId, isSupplemental])
+  @@index([diagnosisReportId])
+  @@index([status])
+  @@map("service_estimates")
+}
+
+model ServiceEstimateLine {
+  id               Int                       @id @default(autoincrement())
+  estimateId       Int                       @map("estimate_id")
+  productId        Int?                      @map("product_id")
+  lineType         InvoiceLineType           @default(product) @map("line_type")
+  description      String?                   @db.VarChar(220)
+  quantity         Int
+  approvedQuantity Int                       @default(0) @map("approved_quantity")
+  approvalStatus   ServiceLineApprovalStatus @default(pending) @map("approval_status")
+  unitCost         Decimal                   @default(0) @map("unit_cost") @db.Decimal(12, 2)
+  unitPrice        Decimal                   @default(0) @map("unit_price") @db.Decimal(12, 2)
+  discountAmount   Decimal                   @default(0) @map("discount_amount") @db.Decimal(12, 2)
+  taxAmount        Decimal                   @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  lineTotal        Decimal                   @default(0) @map("line_total") @db.Decimal(12, 2)
+  notes            String?
+  createdAt        DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  estimate         ServiceEstimate           @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  product          Product?                  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  jobItem          ServiceJobItem?
+
+  @@index([estimateId])
+  @@index([productId])
+  @@index([approvalStatus])
+  @@map("service_estimate_lines")
+}
+
+model ServiceCustomerApproval {
+  id         Int                           @id @default(autoincrement())
+  jobId      Int                           @map("job_id")
+  estimateId Int                           @map("estimate_id")
+  status     ServiceCustomerApprovalStatus
+  method     ServiceApprovalMethod
+  approvedBy String?                       @map("approved_by") @db.VarChar(160)
+  approvedAt DateTime                      @default(now()) @map("approved_at") @db.Timestamptz(3)
+  notes      String?
+  createdBy  Int?                          @map("created_by")
+  createdAt  DateTime                      @default(now()) @map("created_at") @db.Timestamptz(3)
+  job        ServiceJob                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  estimate   ServiceEstimate               @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  creator    User?                         @relation("ServiceCustomerApprovalCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([estimateId])
+  @@index([status])
+  @@map("service_customer_approvals")
+}
+
+model ServiceWorkOrder {
+  id          Int                    @id @default(autoincrement())
+  jobId       Int                    @map("job_id")
+  status      ServiceWorkOrderStatus @default(pending)
+  startedAt   DateTime?              @map("started_at") @db.Timestamptz(3)
+  completedAt DateTime?              @map("completed_at") @db.Timestamptz(3)
+  notes       String?
+  createdBy   Int?                   @map("created_by")
+  createdAt   DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job         ServiceJob             @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator     User?                  @relation("ServiceWorkOrderCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  lines       ServiceWorkOrderLine[]
+
+  @@index([jobId])
+  @@index([status])
+  @@map("service_work_orders")
+}
+
+model ServiceWorkOrderLine {
+  id                   Int                   @id @default(autoincrement())
+  workOrderId          Int                   @map("work_order_id")
+  jobItemId            Int?                  @map("job_item_id")
+  assignedTechnicianId Int?                  @map("assigned_technician_id")
+  status               ServiceWorkLineStatus @default(pending)
+  startedAt            DateTime?             @map("started_at") @db.Timestamptz(3)
+  completedAt          DateTime?             @map("completed_at") @db.Timestamptz(3)
+  notes                String?
+  createdBy            Int?                  @map("created_by")
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  workOrder            ServiceWorkOrder      @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  jobItem              ServiceJobItem?       @relation(fields: [jobItemId], references: [id], onDelete: SetNull)
+  assignedTechnician   User?                 @relation("ServiceWorkOrderLineTechnician", fields: [assignedTechnicianId], references: [id], onDelete: SetNull)
+  creator              User?                 @relation("ServiceWorkOrderLineCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([workOrderId])
+  @@index([jobItemId])
+  @@index([assignedTechnicianId])
+  @@index([status])
+  @@map("service_work_order_lines")
+}
+
+model ServicePartRequest {
+  id                Int                      @id @default(autoincrement())
+  jobId             Int                      @map("job_id")
+  jobItemId         Int?                     @map("job_item_id")
+  productId         Int                      @map("product_id")
+  requestedQuantity Int                      @default(0) @map("requested_quantity")
+  reservedQuantity  Int                      @default(0) @map("reserved_quantity")
+  issuedQuantity    Int                      @default(0) @map("issued_quantity")
+  returnedQuantity  Int                      @default(0) @map("returned_quantity")
+  status            ServicePartRequestStatus @default(requested)
+  notes             String?
+  createdBy         Int?                     @map("created_by")
+  createdAt         DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job               ServiceJob               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobItem           ServiceJobItem?          @relation(fields: [jobItemId], references: [id], onDelete: SetNull)
+  product           Product                  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  creator           User?                    @relation("ServicePartRequestCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([jobItemId])
+  @@index([productId])
+  @@index([status])
+  @@map("service_part_requests")
+}
+
+model ServiceQCReport {
+  id               Int        @id @default(autoincrement())
+  jobId            Int        @map("job_id")
+  complaintSolved  Boolean    @default(false) @map("complaint_solved")
+  roadTestDone     Boolean    @default(false) @map("road_test_done")
+  scannerCheckDone Boolean    @default(false) @map("scanner_check_done")
+  leaksChecked     Boolean    @default(false) @map("leaks_checked")
+  passed           Boolean    @default(false)
+  finalNotes       String?    @map("final_notes")
+  createdBy        Int?       @map("created_by")
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  job              ServiceJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator          User?      @relation("ServiceQCReportCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([passed])
+  @@map("service_qc_reports")
+}
+
+model ServiceDeliveryHandover {
+  id             Int        @id @default(autoincrement())
+  jobId          Int        @map("job_id")
+  deliveredBy    Int?       @map("delivered_by")
+  receivedByName String?    @map("received_by_name") @db.VarChar(160)
+  customerSigned Boolean    @default(false) @map("customer_signed")
+  deliveredAt    DateTime   @default(now()) @map("delivered_at") @db.Timestamptz(3)
+  notes          String?
+  createdBy      Int?       @map("created_by")
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  job            ServiceJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  creator        User?      @relation("ServiceDeliveryHandoverCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([deliveredAt])
+  @@map("service_delivery_handovers")
+}
+
+model ServiceJobHistory {
+  id          Int               @id @default(autoincrement())
+  jobId       Int               @map("job_id")
+  fromStatus  ServiceJobStatus? @map("from_status")
+  toStatus    ServiceJobStatus? @map("to_status")
+  action      String            @db.VarChar(120)
+  performedBy Int?              @map("performed_by")
+  note        String?
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  job         ServiceJob        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  performer   User?             @relation("ServiceJobHistoryPerformer", fields: [performedBy], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+  @@index([createdAt])
+  @@map("service_job_history")
+}
+
+model StockMovement {
+  id               Int               @id @default(autoincrement())
+  productId        Int               @map("product_id")
+  movementType     StockMovementType @map("movement_type")
+  quantity         Int
+  previousQuantity Int               @map("previous_quantity")
+  newQuantity      Int               @map("new_quantity")
+  referenceType    String?           @map("reference_type") @db.VarChar(80)
+  referenceId      Int?              @map("reference_id")
+  notes            String?
+  createdBy        Int?              @map("created_by")
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  product          Product           @relation(fields: [productId], references: [id], onDelete: Restrict)
+  creator          User?             @relation("StockMovementCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([createdAt])
+  @@index([referenceType, referenceId])
+  @@map("stock_movements")
+}

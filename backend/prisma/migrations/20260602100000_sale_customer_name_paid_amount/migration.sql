@@ -1,0 +1,2 @@
+ALTER TABLE "sales" ADD COLUMN "customer_name" VARCHAR(160);
+ALTER TABLE "sales" ADD COLUMN "paid_amount" DECIMAL(12,2) NOT NULL DEFAULT 0;

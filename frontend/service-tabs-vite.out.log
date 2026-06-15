@@ -1,0 +1,54 @@
+
+> car-spare-parts-erp-frontend@1.0.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m334[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m12:35:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:35:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:36:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:36:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:36:16 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:36:32 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:36:48 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:37:30 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/global.css[22m
+[2m12:37:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/global.css[22m
+[2m12:52:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/Dashboard.jsx[22m
+[2m12:52:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/Dashboard.jsx[22m
+[2m12:53:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m12:53:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/i18n/LanguageProvider.jsx, /src/pages/Dashboard.jsx, /src/pages/StockMovements.jsx, /src/pages/Accounts.jsx, /src/pages/Backups.jsx, /src/pages/CarDetails.jsx, /src/pages/Attendance.jsx, /src/pages/Purchases.jsx, /src/pages/Products.jsx, /src/pages/Sales.jsx, /src/pages/Employees.jsx, /src/pages/PurchaseDetails.jsx, /src/pages/EmployeeDetails.jsx, /src/pages/Reports.jsx, /src/pages/MoneyOut.jsx, /src/pages/ServiceJobs.jsx, /src/pages/InventoryCounts.jsx, /src/pages/SaleDetails.jsx, /src/pages/CustomerDetails.jsx, /src/pages/ServiceJobDetails.jsx, /src/pages/SupplierDetails.jsx, /src/pages/Customers.jsx, /src/pages/Suppliers.jsx, /src/pages/CreatePurchase.jsx, /src/pages/CreateSale.jsx, /src/components/PaymentSplitInput.jsx[22m
+[2m12:53:18 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m12:53:25 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:53:29 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:53:46 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:53:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:54:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:54:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:55:24 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:55:24 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:56:02 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:56:02 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:56:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:57:36 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:57:43 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m12:57:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m1:04:31 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:53:43 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/Dashboard.jsx[22m
+[2m2:54:11 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx, /src/layouts/DashboardLayout.jsx, /src/pages/Dashboard.jsx[22m
+[2m2:54:17 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/routes/AppRoutes.jsx[22m
+[2m2:54:21 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/layouts/DashboardLayout.jsx[22m
+[2m2:54:26 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Dashboard.jsx[22m
+[2m2:54:41 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m2:55:00 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobDetails.jsx[22m
+[2m2:55:25 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m2:55:41 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m2:56:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m2:56:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/global.css[22m
+[2m2:56:42 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m2:56:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ServiceJobs.jsx[22m
+[2m2:56:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/global.css[22m
+[2m2:57:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m2:57:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Accounts.jsx[22m
+[2m2:58:06 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Backups.jsx[22m
