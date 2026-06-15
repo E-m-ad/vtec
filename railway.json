@@ -11,7 +11,7 @@
     ]
   },
   "deploy": {
-    "preDeployCommand": "npx prisma migrate deploy",
+    "preDeployCommand": "cd backend && npx prisma migrate deploy",
     "startCommand": "node src/app.js",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
